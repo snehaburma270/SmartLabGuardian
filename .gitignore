@@ -1,0 +1,4 @@
+smartlab_guardian.exe
+*.o
+*.exe
+data/system_log.txt
