@@ -2,17 +2,15 @@
 
 ## Linux-Based Computer Lab Monitoring & Fault Management System
 
-SmartLab Guardian is a C++ based computer lab monitoring system designed to monitor the health of computers in a laboratory environment, identify common system problems, generate alerts, and prioritize maintenance tasks.
+SmartLab Guardian is a C++ based computer lab monitoring system developed as an individual project for the Wipro Centre of Excellence training.
 
-The project demonstrates concepts learned during the Wipro Centre of Excellence training, including C++, Object-Oriented Programming, Data Structures, Linux, Operating Systems, Computer Architecture, Networking, and Git/GitHub.
+The system monitors lab computer health, detects common resource problems, generates alerts, and creates maintenance tasks based on priority.
 
 ---
 
 ## Problem Statement
 
-In a computer laboratory, multiple computers need to be monitored regularly.
-
-Problems such as:
+In a computer laboratory, multiple computers need to be monitored regularly for problems such as:
 
 - High CPU usage
 - High RAM usage
@@ -20,23 +18,22 @@ Problems such as:
 - High temperature
 - Network connectivity failure
 
-can affect the availability and performance of lab computers.
-
-SmartLab Guardian provides a simple way to monitor these conditions and create maintenance tasks when a problem is detected.
+Manually checking every computer can take time. SmartLab Guardian provides a simple system to monitor these conditions and prioritize maintenance tasks.
 
 ---
 
 ## Objectives
 
-- Monitor the health of lab computers.
-- Check CPU, RAM and disk usage.
-- Check network connectivity.
-- Detect abnormal system conditions.
-- Generate alerts for detected problems.
-- Prioritize maintenance tasks.
-- Search for a particular computer.
-- Sort computers based on CPU usage.
-- Maintain a system event log.
+The main objectives of this project are:
+
+- Monitor computer resource usage
+- Check network connectivity
+- Detect abnormal resource usage
+- Generate alerts for detected problems
+- Create prioritized maintenance tasks
+- Demonstrate Data Structures and Algorithms
+- Apply Linux system monitoring concepts
+- Maintain system event logs
 
 ---
 
@@ -44,108 +41,131 @@ SmartLab Guardian provides a simple way to monitor these conditions and create m
 
 - C++
 - Linux / WSL
-- Git and GitHub
+- Git
+- GitHub
 
 ---
 
-## Concepts Used
+## Concepts Demonstrated
 
 ### C++ and OOP
 
-The project uses classes and structures to represent:
+The project uses:
 
-- Computer
-- Monitor
-- LabManager
-- MaintenanceTask
-- Alert
+- Classes
+- Structures
+- Objects
+- Functions
+- Pointers
+- Dynamic memory allocation
+- File handling
 
-### Data Structures
+### Data Structures and Algorithms
 
-The following data structures and algorithms are used:
+The project demonstrates:
 
 - Singly Linked List
-- Priority Queue
 - Linear Search
+- Priority Queue
 - Bubble Sort
 
 ### Linux
 
-Linux system information is obtained using:
+Linux concepts are used for:
 
-- `/proc/stat` for CPU information
-- `/proc/meminfo` for memory information
-- Linux filesystem information for disk usage
-- `ping` for network connectivity checking
+- System resource monitoring
+- CPU usage
+- RAM usage
+- Disk usage
+- Network connectivity checking
 
 ### Computer Architecture
 
-The project relates system monitoring to:
+The project relates to:
 
 - CPU
-- RAM
+- Memory
 - Storage
-- System performance
+- Computer performance
+- Hardware and software interaction
 
 ### Networking
 
-The project uses computer IP addresses and network connectivity checking to determine whether a lab computer is reachable.
+The project uses basic networking concepts such as:
+
+- IP addresses
+- Network connectivity
+- Computer nodes
+- Ping-based connectivity checking
 
 ---
 
 ## Main Features
 
-### 1. Lab Computer Registration
+### 1. Computer Registration
 
-The system maintains a list of registered lab computers containing:
+The system registers lab computers using:
 
 - Computer ID
 - IP address
 - Location
+
+Example:
+
+```text
+LAB-PC-01
+192.168.1.101
+Lab-A
+```
+
+### 2. Network Connectivity Check
+
+The system checks whether a computer is reachable through the network.
+
+If a computer cannot be reached, it is marked as offline and a critical maintenance task is generated.
+
+### 3. Resource Monitoring
+
+The system monitors:
+
 - CPU usage
 - RAM usage
 - Disk usage
 - Temperature
-- Online/Offline status
 
-### 2. System Health Monitoring
+The local Linux machine provides actual CPU, RAM and disk information.
 
-The system checks the health of the registered computers.
-
-For the local Linux machine, CPU, RAM and disk information can be obtained from Linux system information.
-
-Other lab nodes are represented as simulated lab machines for demonstration.
-
-### 3. Network Connectivity Check
-
-The system checks whether a registered computer is reachable through its IP address.
-
-If a computer cannot be reached, a critical maintenance task is generated.
+Other lab computers use simulated values for demonstration.
 
 ### 4. Alert Generation
 
-Alerts are generated when system conditions cross defined thresholds.
+Alerts are generated when resource usage crosses predefined thresholds.
 
-Examples include:
+Examples:
 
-- High CPU usage
-- High RAM usage
-- High disk usage
-- High temperature
-- Network connection failure
+```text
+CPU usage > 75%
+RAM usage > 80%
+Disk usage > 90%
+Temperature > 82 C
+```
+
+Network connection failure is also treated as a critical condition.
 
 ### 5. Priority Queue
 
-Maintenance tasks are inserted into a priority queue.
+Maintenance tasks are inserted into a priority queue according to their severity.
 
-Tasks with higher severity are dispatched before lower-severity tasks.
+Higher-severity tasks are dispatched before lower-severity tasks.
 
-Example priority levels:
+Example:
 
-- CRITICAL
-- HIGH
-- MEDIUM
-- LOW
+```text
+CRITICAL
+HIGH
+MEDIUM
+LOW
+```
 
 ### 6. Linear Search
 
@@ -155,8 +175,10 @@ Example:
 
 ```text
 LAB-PC-03
+```
 
-```markdown
+The system traverses the linked list and searches for the requested computer.
+
 ### 7. Bubble Sort
 
 Computers can be sorted according to CPU usage.
@@ -189,25 +211,35 @@ SmartLabGuardian/
     ├── Monitor.cpp
     ├── Monitor.h
     └── main.cpp
+```
 
 ---
 
 ## How to Compile
 
-Open the Linux/WSL terminal and move to the `src` directory:
+Open the Linux/WSL terminal and move to the project directory:
 
 ```bash
-cd src
+cd /mnt/c/Users/HP/OneDrive/Desktop/SmartLabGuardian
+```
 
-```markdown
 Compile the program using:
 
 ```bash
-g++ -std=c++17 main.cpp LabManager.cpp Monitor.cpp -o SmartLabGuardian
-RUN: ./SmartLabGuardian
+g++ -std=c++17 src/main.cpp src/LabManager.cpp src/Monitor.cpp -o SmartLabGuardian
+```
 
+Run the program:
 
-Program Menu
+```bash
+./SmartLabGuardian
+```
+
+---
+
+## Program Menu
+
+```text
 ============================================
        SMARTLAB GUARDIAN MONITORING
 ============================================
@@ -217,25 +249,36 @@ Program Menu
 4. Sort Nodes by CPU Utilization (Bubble Sort)
 5. Dispatch Highest Priority Task (Heap Queue)
 6. Exit Application
+```
 
-Example
+---
+
+## Example
 
 After scanning the lab computers, the system may detect:
 
+```text
 LAB-PC-02
 RAM: 81%
+```
 
 and generate a HIGH priority maintenance task.
 
 The priority queue can then dispatch:
 
+```text
 Priority: HIGH
 Issue: RAM consumption high (>80%)
 Status: Dispatched to Lab Sysadmin.
-DSA Demonstration
+```
 
-The project demonstrates the following DSA concepts:
+---
 
+## DSA Demonstration
+
+The main processing flow is:
+
+```text
 Computer Registration
         ↓
 Singly Linked List
@@ -249,41 +292,54 @@ Alert Generation
 Priority Queue
         ↓
 Maintenance Task Dispatch
+```
 
 Bubble Sort is also used to arrange computers according to CPU usage.
 
-Limitations
-Only the local Linux machine provides actual system resource values.
-Other lab computers are represented using simulated values for demonstration.
-Temperature values for simulated computers are also simulated.
-The project does not directly control or repair hardware.
-Microcontroller and device-driver concepts are represented at a conceptual/simulation level.
-Future Scope
+---
+
+## Limitations
+
+- Only the local Linux machine provides actual system resource values.
+- Other lab computers are represented using simulated values for demonstration.
+- Temperature values for simulated computers are also simulated.
+- The project does not directly control or repair hardware.
+- Microcontroller and device-driver concepts are represented at a conceptual/simulation level.
+
+---
+
+## Future Scope
 
 The system can later be extended with:
 
-Real monitoring agents on multiple lab computers.
-A graphical user interface.
-Database storage for monitoring history.
-More detailed network monitoring.
-Hardware sensor integration.
-Real device-driver or microcontroller integration.
-Learning Outcomes
+- Real monitoring agents on multiple lab computers
+- A graphical user interface
+- Database storage for monitoring history
+- More detailed network monitoring
+- Hardware sensor integration
+- Real device-driver or microcontroller integration
+
+---
+
+## Learning Outcomes
 
 This project helped demonstrate practical use of:
 
-C++ programming
-Object-Oriented Programming
-Data Structures and Algorithms
-Linux system monitoring
-Operating System concepts
-Computer Architecture
-Networking concepts
-File handling
-Git and GitHub
-Author
+- C++ programming
+- Object-Oriented Programming
+- Data Structures and Algorithms
+- Linux system monitoring
+- Operating System concepts
+- Computer Architecture
+- Networking concepts
+- File handling
+- Git and GitHub
 
-Sneha Burma
+---
 
-B.Tech Computer Science and Engineering
+## Author
+
+**Sneha Burma**
+
+B.Tech Computer Science and Engineering  
 ITER, SOA University
