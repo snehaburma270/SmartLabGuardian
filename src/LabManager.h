@@ -16,6 +16,7 @@ private:
     int nextAlertId;
 
     void logEvent(const std::string& message);
+    void evaluateFaults(Computer* computer);        // Fault Detection Module
 
 public:
     LabManager();
@@ -25,7 +26,7 @@ public:
     void addComputer(const std::string& id, const std::string& ip, const std::string& loc);
     void displayComputers() const;
     Computer* findComputer(const std::string& id); // Linear Search
-    void scanNetworkAndEvaluate();                 // Threshold analysis & queuing
+    void scanNetworkAndEvaluate();                 // Monitoring & fault evaluation
     void processNextMaintenanceTask();             // Highest priority dispatch
     void sortAndDisplayByCpu();                    // Bubble Sort
 };
