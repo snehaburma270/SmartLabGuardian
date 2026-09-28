@@ -1,9 +1,13 @@
 #ifndef LAB_MANAGER_H
 #define LAB_MANAGER_H
 
+#include "TcpServer.h"
+#include "UdpClient.h"
 #include "Computer.h"
 #include "Alert.h"
 #include "MaintenanceTask.h"
+#include "SharedMemoryManager.h"
+#include "SemaphoreManager.h"
 #include <queue>
 #include <vector>
 #include <string>
@@ -14,6 +18,10 @@ private:
     std::priority_queue<MaintenanceTask> taskQueue; // C++ STL Priority Queue (Heap)
     int nextTaskId;
     int nextAlertId;
+    SharedMemoryManager sharedMemory;
+    SemaphoreManager semaphore;
+    TcpServer tcpServer;
+    UdpClient udpClient;
 
     void logEvent(const std::string& message);
     void evaluateFaults(Computer* computer);        // Fault Detection Module

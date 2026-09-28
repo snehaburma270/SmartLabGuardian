@@ -1,4 +1,13 @@
 smartlab_guardian.exe
+SmartLabGuardian
+DeviceClient
 *.o
 *.exe
-data/system_log.txt
+data/
+src/data/
+
+# Linux compiled binaries
+SharedMemoryReader
+TcpClient
+UdpClient
+UdpServer

@@ -9,7 +9,11 @@
 #include <unistd.h>
 
 // Constructor initializes empty list and IDs
-LabManager::LabManager() : head(nullptr), nextTaskId(1), nextAlertId(101) {}
+LabManager::LabManager() : head(nullptr), nextTaskId(1), nextAlertId(101) {
+    sharedMemory.create();
+    semaphore.create();
+    tcpServer.start(5000);
+}
 
 // Destructor traverses the linked list and frees dynamic memory
 LabManager::~LabManager() {
@@ -139,8 +143,9 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("CRITICAL: Disk capacity exceeded on " + computer->id);
+    }
 
-    } else if (computer->temperature > 82) {
+    if (computer->temperature > 82) {
         taskQueue.push({
             nextTaskId++,
             computer->id,
@@ -149,8 +154,9 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("CRITICAL: Overheating reported on " + computer->id);
+    }
 
-    } else if (computer->ramUsage > 80.0) {
+    if (computer->ramUsage > 80.0) {
         taskQueue.push({
             nextTaskId++,
             computer->id,
@@ -159,8 +165,9 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("HIGH: High memory usage on " + computer->id);
+    }
 
-    } else if (computer->cpuUsage > 75.0) {
+    if (computer->cpuUsage > 75.0) {
         taskQueue.push({
             nextTaskId++,
             computer->id,
@@ -184,13 +191,44 @@ void LabManager::scanNetworkAndEvaluate() {
         // Evaluate the collected health information
         evaluateFaults(temp);
 
-        temp = temp->next;
+        // Store the latest computer status in shared memory
+        semaphore.wait();
+
+        sharedMemory.writeStatus(
+          temp->id,
+          temp->ipAddress,
+          temp->location,
+          temp->cpuUsage,
+          temp->ramUsage,
+          temp->diskUsage,
+          temp->temperature,
+          temp->isOnline
+          );
+
+          semaphore.signal();
+
+        std::string message =
+            "Computer: " + temp->id +
+            " | CPU: " + std::to_string(temp->cpuUsage) + "%" +
+            " | RAM: " + std::to_string(temp->ramUsage) + "%" +
+            " | Disk: " + std::to_string(temp->diskUsage) + "%";
+
+         tcpServer.sendStatus(message);
+         udpClient.sendMessage(
+               message,
+               "127.0.0.1",
+                5001
+);
+
+temp = temp->next;
     }
 
     std::cout << "\n[+] Network scan complete. All nodes evaluated and priority queue updated.\n";
 }
 
-// Pops the highest-priority ticket from the Priority Queue
+
+
+// Pops the highest-priorit ticket from the Priority Queue
 void LabManager::processNextMaintenanceTask() {
     if (taskQueue.empty()) {
         std::cout << "\n[i] Priority Queue is empty. No tasks to dispatch.\n";
@@ -200,38 +238,34 @@ void LabManager::processNextMaintenanceTask() {
     MaintenanceTask top = taskQueue.top();
     taskQueue.pop();
 
-    std::string sevStr;
+    std::string priorityText;
 
     switch (top.priority) {
-        case Severity::CRITICAL:
-            sevStr = "CRITICAL";
-            break;
+    case Severity::CRITICAL:
+        priorityText = "CRITICAL";
+        break;
 
-        case Severity::HIGH:
-            sevStr = "HIGH";
-            break;
+    case Severity::HIGH:
+        priorityText = "HIGH";
+        break;
 
-        case Severity::MEDIUM:
-            sevStr = "MEDIUM";
-            break;
+    case Severity::MEDIUM:
+        priorityText = "MEDIUM";
+        break;
 
-        case Severity::LOW:
-            sevStr = "LOW";
-            break;
-    }
+    case Severity::LOW:
+        priorityText = "LOW";
+        break;
+}
 
-    std::cout << "\n================ DISPATCHING TASK ================\n"
-              << "Task ID    : " << top.taskId << "\n"
+    std::cout << "\nTask ID    : " << top.taskId << "\n"
               << "Target Node: " << top.computerId << "\n"
-              << "Priority   : [" << sevStr << "]\n"
-              << "Issue      : " << top.issue << "\n"
-              << "Status     : Dispatched to Lab Sysadmin.\n"
-              << "==================================================\n";
+              << "Priority   : [" << priorityText << "]\n"
+              << "Issue      : " << top.issue << "\n";
 
     logEvent("Dispatched task ID " +
              std::to_string(top.taskId) +
-             " on " +
-             top.computerId);
+             " on " + top.computerId);
 }
 
 // Bubble Sort demonstration on node pointers
