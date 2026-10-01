@@ -40,7 +40,7 @@ Manually checking every computer can be time-consuming. SmartLab Guardian provid
 ## Technologies Used
 
 * C++17
-* Linux / WSL2
+* Linux
 * POSIX system calls
 * Linux `/proc` filesystem
 * TCP sockets
@@ -338,7 +338,7 @@ The application checks for the expected character device:
 
 The driver source is included in the project.
 
-Because the project was developed in WSL2, the character device could not be loaded in the development environment. The application therefore reports its availability honestly at runtime.
+Because the project was developed and tested in a Linux environment through WSL2, the character device could not be loaded in the development environment. The application therefore reports its availability honestly at runtime.
 
 ---
 
@@ -400,7 +400,7 @@ SmartLabGuardian/
 
 # How to Compile
 
-Open the Linux/WSL terminal and move to the project directory:
+Open the Linux terminal and move to the project directory:
 
 ```bash
 cd /mnt/c/Users/HP/OneDrive/Desktop/SmartLabGuardian
@@ -538,13 +538,13 @@ The following components were tested successfully:
 | TCP communication           | Tested                |
 | UDP communication           | Tested                |
 | UDP telemetry from 4 nodes  | Tested                |
-| Linux device-driver loading | Not available in WSL2 |
+| Linux device-driver loading | Not available in the current environment |
 
 ---
 
 # Limitations
 
-* The project was developed in WSL2.
+* The project was developed and tested in a Linux environment through WSL2.
 * The Linux character device `/dev/smartlab` could not be loaded in the WSL2 development environment.
 * Only the local Linux environment provides actual system telemetry.
 * Other lab-node values are simulated for demonstration.
