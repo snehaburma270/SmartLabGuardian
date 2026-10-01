@@ -13,6 +13,7 @@ struct Computer {
     double diskUsage;        // Percentage (0.0 - 100.0)
     int temperature;         // Simulated hardware sensor reading (°C)
     bool isOnline;
+    std::string availability;
 
     Computer* next;          // Pointer to next node in the linked list
 
@@ -20,7 +21,8 @@ struct Computer {
     Computer(std::string id_, std::string ip_, std::string loc_)
         : id(id_), ipAddress(ip_), location(loc_),
           cpuUsage(0.0), ramUsage(0.0), diskUsage(0.0),
-          temperature(42), isOnline(true), next(nullptr) {}
+          temperature(42), isOnline(true),
+          availability("AVAILABLE"), next(nullptr) {}
 };
 
 #endif

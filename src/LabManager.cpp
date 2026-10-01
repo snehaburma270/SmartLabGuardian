@@ -92,7 +92,8 @@ void LabManager::displayComputers() const {
               << std::setw(10) << "RAM(%)"
               << std::setw(10) << "Disk(%)"
               << std::setw(10) << "Temp(C)"
-              << std::setw(8)  << "State\n";
+              << std::setw(8)  << "State"
+              << std::setw(12) << "Availability\n";
 
     std::cout << "----------------------------------------------------------------------------------\n";
 
@@ -107,15 +108,15 @@ void LabManager::displayComputers() const {
                   << std::setw(10) << temp->ramUsage
                   << std::setw(10) << temp->diskUsage
                   << std::setw(10) << temp->temperature
-                  << (temp->isOnline ? "ONLINE" : "OFFLINE") << "\n";
+                  << std::setw(8) << (temp->isOnline ? "ONLINE" : "OFFLINE")
+                  << std::setw(12) << temp->availability
+                  << "\n";
 
         temp = temp->next;
     }
 
     std::cout << "==================================================================================\n";
 }
-
-// Linear Search across dynamic linked nodes
 Computer* LabManager::findComputer(const std::string& id) {
     Computer* temp = head;
 
@@ -134,6 +135,8 @@ Computer* LabManager::findComputer(const std::string& id) {
 // Evaluates the health values of a single computer
 void LabManager::evaluateFaults(Computer* computer) {
 
+    bool faultDetected = false;
+
     if (computer->diskUsage > 90.0) {
         taskQueue.push({
             nextTaskId++,
@@ -143,6 +146,7 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("CRITICAL: Disk capacity exceeded on " + computer->id);
+        faultDetected = true;
     }
 
     if (computer->temperature > 82) {
@@ -154,6 +158,7 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("CRITICAL: Overheating reported on " + computer->id);
+        faultDetected = true;
     }
 
     if (computer->ramUsage > 80.0) {
@@ -165,6 +170,7 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("HIGH: High memory usage on " + computer->id);
+        faultDetected = true;
     }
 
     if (computer->cpuUsage > 75.0) {
@@ -176,6 +182,17 @@ void LabManager::evaluateFaults(Computer* computer) {
         });
 
         logEvent("MEDIUM: CPU threshold breached on " + computer->id);
+        faultDetected = true;
+    }
+
+    if (faultDetected) {
+        computer->availability = "FAULTY";
+
+        std::cout << "[!] " << computer->id
+                  << " marked as FAULTY.\n";
+
+        logEvent("FAULTY: " + computer->id +
+                 " marked unavailable due to detected fault.");
     }
 }
 
@@ -304,4 +321,83 @@ void LabManager::sortAndDisplayByCpu() {
                   << c->ipAddress
                   << "\n";
     }
+}
+void LabManager::requestComputer() {
+    double requiredRam;
+    double maximumCpu;
+
+    std::cout << "\nEnter minimum RAM required (%): ";
+    std::cin >> requiredRam;
+
+    std::cout << "Enter maximum acceptable CPU usage (%): ";
+    std::cin >> maximumCpu;
+
+    Computer* temp = head;
+
+    while (temp != nullptr) {
+
+        double availableRam = 100.0 - temp->ramUsage;
+
+        if (temp->availability == "AVAILABLE" &&
+            temp->isOnline &&
+            availableRam >= requiredRam &&
+            temp->cpuUsage <= maximumCpu) {
+
+            temp->availability = "ASSIGNED";
+
+            std::cout << "\n[+] Computer Assigned Successfully\n";
+            std::cout << "Computer: " << temp->id << "\n";
+            std::cout << "IP Address: " << temp->ipAddress << "\n";
+            std::cout << "Location: " << temp->location << "\n";
+            std::cout << "Available RAM: " << availableRam << "%\n";
+            std::cout << "Current CPU Usage: " << temp->cpuUsage << "%\n";
+
+            return;
+        }
+
+        temp = temp->next;
+    }
+
+    std::cout << "\n[-] No suitable computer is available.\n";
+}
+
+void LabManager::releaseComputer() {
+    std::string id;
+
+    std::cout << "\nEnter Computer ID to release: ";
+    std::cin >> id;
+
+    Computer* temp = head;
+
+    while (temp != nullptr) {
+
+        if (temp->id == id) {
+
+            if (temp->availability == "ASSIGNED") {
+
+                temp->availability = "AVAILABLE";
+
+                std::cout << "\n[+] Computer Released Successfully\n";
+                std::cout << "Computer: " << temp->id << "\n";
+                std::cout << "IP Address: " << temp->ipAddress << "\n";
+                std::cout << "Location: " << temp->location << "\n";
+                std::cout << "Availability: " << temp->availability << "\n";
+
+                return;
+            }
+
+            if (temp->availability == "FAULTY") {
+                std::cout << "\n[-] Computer is marked as FAULTY.\n";
+                std::cout << "It cannot be released as an available computer.\n";
+                return;
+            }
+
+            std::cout << "\n[-] Computer is not currently assigned.\n";
+            return;
+        }
+
+        temp = temp->next;
+    }
+
+    std::cout << "\n[-] Computer ID not found.\n";
 }

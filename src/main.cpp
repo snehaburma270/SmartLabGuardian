@@ -1,4 +1,3 @@
-
 #include "LabManager.h"
 #include <iostream>
 #include <fstream>
@@ -11,12 +10,14 @@ void showMenu() {
               << "       SMARTLAB GUARDIAN MONITORING         \n"
               << "============================================\n"
               << "1. Scan & Update Node Health (Telemetry/Proc)\n"
-              << "2. View All Registered Monitored Computers\n"
-              << "3. Search Computer by ID (Linear Search)\n"
-              << "4. Sort Nodes by CPU Utilization (Bubble Sort)\n"
-              << "5. Dispatch Highest Priority Task (Heap Queue)\n"
-              << "6. Check Linux Device Driver\n"
-              << "7. Exit Application\n"
+              << "2. Request a Computer\n"
+              << "3. Release a Computer\n"
+              << "4. View All Registered Monitored Computers\n"
+              << "5. Search Computer by ID (Linear Search)\n"
+              << "6. Sort Nodes by CPU Utilization (Bubble Sort)\n"
+              << "7. Dispatch Highest Priority Task (Heap Queue)\n"
+              << "8. Check Linux Device Driver\n"
+              << "9. Exit Application\n"
               << "Enter choice: ";
 }
 
@@ -59,7 +60,7 @@ int main() {
 
     int choice = 0;
 
-    while (choice != 7) {
+    while (choice != 9) {
 
         showMenu();
 
@@ -76,10 +77,18 @@ int main() {
                 break;
 
             case 2:
+                lab.requestComputer();
+                break;
+
+            case 3:
+                lab.releaseComputer();
+                break;
+
+            case 4:
                 lab.displayComputers();
                 break;
 
-            case 3: {
+            case 5: {
                 std::cout << "\nEnter Computer ID: ";
 
                 std::string id;
@@ -99,6 +108,8 @@ int main() {
                     std::cout << "    Status      : "
                               << (found->isOnline ? "ONLINE" : "OFFLINE")
                               << "\n";
+                    std::cout << "    Availability: "
+                              << found->availability << "\n";
                 }
                 else {
                     std::cout << "\n[-] Computer ID not found.\n";
@@ -107,26 +118,26 @@ int main() {
                 break;
             }
 
-            case 4:
+            case 6:
                 lab.sortAndDisplayByCpu();
                 break;
 
-            case 5:
+            case 7:
                 lab.processNextMaintenanceTask();
                 break;
 
-            case 6:
+            case 8:
                 checkLinuxDevice();
                 break;
 
-            case 7:
+            case 9:
                 std::cout << "\nShutting down SmartLab Guardian.\n";
                 std::cout << "System logs are saved in the data folder.\n";
                 break;
 
             default:
                 std::cout << "\nInvalid choice. "
-                          << "Please enter a number between 1 and 7.\n";
+                          << "Please enter a number between 1 and 9.\n";
         }
     }
 

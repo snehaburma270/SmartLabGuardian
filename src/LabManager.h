@@ -37,6 +37,8 @@ public:
     void scanNetworkAndEvaluate();                 // Monitoring & fault evaluation
     void processNextMaintenanceTask();             // Highest priority dispatch
     void sortAndDisplayByCpu();                    // Bubble Sort
+    void requestComputer();                        // Resource allocation
+    void releaseComputer();                        //Release assigned computer
 };
 
 #endif
