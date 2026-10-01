@@ -4,7 +4,7 @@
 
 SmartLab Guardian is a C++-based computer lab monitoring and fault-management system developed as an individual project for the **Wipro Centre of Excellence (Embedded) training**.
 
-The system monitors lab computer health, detects resource-related faults, generates maintenance tasks based on severity, exchanges telemetry using network communication, and demonstrates Linux system-programming and operating-system concepts.
+The system monitors lab computer health, detects resource-related faults, generates maintenance tasks based on severity, exchanges telemetry using network communication, manages computer resource allocation, and demonstrates Linux system-programming and operating-system concepts.
 
 ---
 
@@ -18,7 +18,7 @@ In a computer laboratory, multiple computers need to be monitored for problems s
 * High temperature
 * Network connectivity problems
 
-Manually checking every computer can be time-consuming. SmartLab Guardian provides a command-line monitoring system that detects abnormal conditions and prioritizes maintenance tasks.
+Manually checking every computer can be time-consuming. SmartLab Guardian provides a command-line monitoring system that detects abnormal conditions, manages computer availability, and prioritizes maintenance tasks.
 
 ---
 
@@ -28,6 +28,8 @@ Manually checking every computer can be time-consuming. SmartLab Guardian provid
 * Detect abnormal CPU, RAM, disk, and temperature conditions
 * Generate maintenance tasks for detected faults
 * Prioritize critical maintenance tasks
+* Manage computer allocation and release
+* Prevent faulty computers from being assigned
 * Demonstrate Data Structures and Algorithms
 * Apply Linux system-programming concepts
 * Demonstrate inter-process communication
@@ -99,6 +101,7 @@ RAM Usage
 Disk Usage
 Temperature
 Online/Offline Status
+Availability State
 ```
 
 ### Linear Search
@@ -205,6 +208,9 @@ Logged events include:
 * Node registration
 * Fault detection
 * Maintenance-task dispatch
+* Computer allocation
+* Computer release
+* Faulty computer status
 
 ---
 
@@ -277,6 +283,103 @@ Multiple faults can be generated for the same computer during a single scan.
 
 For example, a computer with both high RAM and high CPU can generate two separate maintenance tasks.
 
+When a fault is detected, the affected computer is marked as:
+
+```text
+FAULTY
+```
+
+Faulty computers are excluded from computer allocation.
+
+---
+
+# Computer Resource Management
+
+SmartLab Guardian also manages the availability of registered lab computers.
+
+## Request a Computer
+
+A user can request a computer by entering:
+
+* Minimum required RAM
+* Maximum acceptable CPU usage
+
+The system searches the registered computers and selects a suitable computer that is:
+
+* `AVAILABLE`
+* Online
+* Has sufficient available RAM
+* Has CPU usage within the requested limit
+
+Available RAM is calculated from the current RAM utilization:
+
+```text
+Available RAM = 100 - Current RAM Usage
+```
+
+When a suitable computer is found, its availability state changes:
+
+```text
+AVAILABLE → ASSIGNED
+```
+
+The system then displays the assigned computer's:
+
+* Computer ID
+* IP address
+* Location
+* Available RAM
+* Current CPU usage
+
+If no suitable computer is available, the system displays an appropriate message.
+
+---
+
+## Release a Computer
+
+An assigned computer can be released using its computer ID.
+
+When successfully released:
+
+```text
+ASSIGNED → AVAILABLE
+```
+
+The computer can then be considered for future allocation requests.
+
+A computer marked as `FAULTY` cannot be released as an available computer.
+
+---
+
+## Availability States
+
+Each registered computer can have one of three availability states:
+
+```text
+AVAILABLE
+ASSIGNED
+FAULTY
+```
+
+The states represent:
+
+| State       | Meaning                                              |
+| ----------- | ---------------------------------------------------- |
+| `AVAILABLE` | Computer can be assigned if it satisfies the request |
+| `ASSIGNED`  | Computer is currently allocated to a user            |
+| `FAULTY`    | Computer has a detected fault and cannot be assigned |
+
+The availability state is displayed together with the computer's monitoring information.
+
+Example:
+
+```text
+LAB-PC-01   ASSIGNED
+LAB-PC-02   FAULTY
+LAB-PC-03   FAULTY
+LAB-PC-04   AVAILABLE
+```
+
 ---
 
 # Main Features
@@ -300,35 +403,67 @@ The system scans registered nodes and updates their health information.
 
 Resource thresholds are evaluated and maintenance tasks are generated automatically.
 
-## 4. Priority-Based Maintenance
+If a fault is detected, the affected computer is marked as `FAULTY`.
+
+Faulty computers are automatically skipped during computer allocation.
+
+## 4. Computer Resource Management
+
+Users can request a computer by specifying minimum required RAM and maximum acceptable CPU usage.
+
+The system searches for a suitable online computer that is `AVAILABLE` and satisfies the requested resource conditions.
+
+## 5. Computer Release
+
+An assigned computer can be released using its computer ID.
+
+The availability state changes from:
+
+```text
+ASSIGNED → AVAILABLE
+```
+
+## 6. Availability States
+
+Each computer can be in one of the following states:
+
+```text
+AVAILABLE
+ASSIGNED
+FAULTY
+```
+
+Faulty computers cannot be assigned.
+
+## 7. Priority-Based Maintenance
 
 The priority queue ensures that higher-severity tasks are dispatched first.
 
-## 5. Computer Search
+## 8. Computer Search
 
 A computer can be searched by its ID using Linear Search.
 
-## 6. CPU-Based Sorting
+## 9. CPU-Based Sorting
 
 Computers can be sorted using Bubble Sort according to CPU utilization.
 
-## 7. Shared-Memory IPC
+## 10. Shared-Memory IPC
 
 Node telemetry can be shared with another process using shared memory.
 
-## 8. Synchronization
+## 11. Synchronization
 
 Semaphore synchronization protects shared-memory operations.
 
-## 9. Network Telemetry
+## 12. Network Telemetry
 
 UDP telemetry and TCP status communication are implemented.
 
-## 10. System Logging
+## 13. System Logging
 
 Important events are recorded in `data/system_log.txt` using file locking.
 
-## 11. Linux Device Driver Check
+## 14. Linux Device Driver Check
 
 The application checks for the expected character device:
 
@@ -349,12 +484,14 @@ Because the project was developed and tested in a Linux environment through WSL2
        SMARTLAB GUARDIAN MONITORING
 ============================================
 1. Scan & Update Node Health (Telemetry/Proc)
-2. View All Registered Monitored Computers
-3. Search Computer by ID (Linear Search)
-4. Sort Nodes by CPU Utilization (Bubble Sort)
-5. Dispatch Highest Priority Task (Heap Queue)
-6. Check Linux Device Driver
-7. Exit Application
+2. Request a Computer
+3. Release a Computer
+4. View All Registered Monitored Computers
+5. Search Computer by ID (Linear Search)
+6. Sort Nodes by CPU Utilization (Bubble Sort)
+7. Dispatch Highest Priority Task (Heap Queue)
+8. Check Linux Device Driver
+9. Exit Application
 ```
 
 ---
@@ -481,6 +618,67 @@ multiple maintenance tasks were generated.
 
 The priority queue dispatched the HIGH-priority task before the MEDIUM-priority task.
 
+When faults were detected, the affected computers were marked as:
+
+```text
+LAB-PC-02 → FAULTY
+LAB-PC-03 → FAULTY
+```
+
+These computers were then excluded from resource allocation.
+
+---
+
+# Example Computer Allocation
+
+A user can request a computer by providing resource requirements.
+
+Example:
+
+```text
+Enter minimum RAM required (%): 20
+Enter maximum acceptable CPU usage (%): 100
+```
+
+If a suitable computer is available:
+
+```text
+[+] Computer Assigned Successfully
+Computer: LAB-PC-01
+IP Address: 192.168.1.101
+Location: Lab-A
+Available RAM: 93.9%
+Current CPU Usage: 0.2%
+```
+
+The availability state becomes:
+
+```text
+AVAILABLE → ASSIGNED
+```
+
+---
+
+# Example Computer Release
+
+An assigned computer can be released using its ID:
+
+```text
+Enter Computer ID to release: LAB-PC-01
+```
+
+The system changes its state:
+
+```text
+ASSIGNED → AVAILABLE
+```
+
+and displays:
+
+```text
+[+] Computer Released Successfully
+```
+
 ---
 
 # System Processing Flow
@@ -494,7 +692,25 @@ System Health Monitoring
         ↓
 Fault Detection
         ↓
-Alert / Maintenance Task Creation
+Availability State
+        ↓
+Computer Resource Request
+        ↓
+Suitable Computer Assignment
+        ↓
+ASSIGNED
+        ↓
+Computer Release
+        ↓
+AVAILABLE
+```
+
+Maintenance processing:
+
+```text
+Fault Detection
+        ↓
+Maintenance Task Creation
         ↓
 Priority Queue
         ↓
@@ -522,23 +738,28 @@ Health Data
 
 The following components were tested successfully:
 
-| Component                   | Status                |
-| --------------------------- | --------------------- |
-| C++ application             | Tested                |
-| Node registration           | Tested                |
-| `/proc` telemetry           | Tested                |
-| Linked List                 | Tested                |
-| Linear Search               | Tested                |
-| Bubble Sort                 | Tested                |
-| Priority Queue              | Tested                |
-| Multiple fault detection    | Tested                |
-| Shared Memory               | Tested                |
-| Semaphore synchronization   | Tested                |
-| File locking and logging    | Tested                |
-| TCP communication           | Tested                |
-| UDP communication           | Tested                |
-| UDP telemetry from 4 nodes  | Tested                |
-| Linux device-driver loading | Not available in the current environment |
+| Component                        | Status                                   |
+| -------------------------------- | ---------------------------------------- |
+| C++ application                  | Tested                                   |
+| Node registration                | Tested                                   |
+| `/proc` telemetry                | Tested                                   |
+| Linked List                      | Tested                                   |
+| Linear Search                    | Tested                                   |
+| Bubble Sort                      | Tested                                   |
+| Priority Queue                   | Tested                                   |
+| Multiple fault detection         | Tested                                   |
+| Computer resource request        | Tested                                   |
+| Computer release                 | Tested                                   |
+| AVAILABLE / ASSIGNED states      | Tested                                   |
+| FAULTY state                     | Tested                                   |
+| Faulty-node allocation exclusion | Tested                                   |
+| Shared Memory                    | Tested                                   |
+| Semaphore synchronization        | Tested                                   |
+| File locking and logging         | Tested                                   |
+| TCP communication                | Tested                                   |
+| UDP communication                | Tested                                   |
+| UDP telemetry from 4 nodes       | Tested                                   |
+| Linux device-driver loading      | Not available in the current environment |
 
 ---
 
@@ -551,6 +772,7 @@ The following components were tested successfully:
 * The configured IP addresses represent demonstration lab nodes.
 * The current UDP demonstration uses localhost communication.
 * The project does not directly repair or control physical hardware.
+* Computer allocation is based on the current monitoring values and does not physically control or power on lab computers.
 
 ---
 
@@ -567,6 +789,7 @@ The project can be extended with:
 * Linux kernel deployment on a compatible environment
 * Microcontroller integration
 * Remote maintenance management
+* Real-time resource reservation across multiple lab computers
 
 ---
 
@@ -588,6 +811,7 @@ This project provided practical experience with:
 * Computer Architecture
 * Operating System concepts
 * Linux device-driver concepts
+* Resource allocation logic
 * Git and GitHub
 
 ---
