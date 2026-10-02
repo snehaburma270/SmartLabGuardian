@@ -2,141 +2,201 @@
 
 ## Linux-Based Computer Lab Monitoring & Fault Management System
 
-SmartLab Guardian is a C++-based computer lab monitoring and fault-management system developed as an individual project for the **Wipro Centre of Excellence (Embedded) training**.
+SmartLab Guardian is a C++-based computer lab monitoring and resource management system developed as an individual project for the Wipro Centre of Excellence training.
 
-The system monitors lab computer health, detects resource-related faults, generates maintenance tasks based on severity, exchanges telemetry using network communication, manages computer resource allocation, and demonstrates Linux system-programming and operating-system concepts.
+The system monitors lab computer health, detects resource-related faults, generates maintenance tasks according to priority, and manages computer availability for users.
 
 ---
 
 ## Problem Statement
 
-In a computer laboratory, multiple computers need to be monitored for problems such as:
+In a computer laboratory, multiple computers need to be monitored regularly for problems such as:
 
-* High CPU utilization
-* High RAM utilization
-* High disk utilization
+* High CPU usage
+* High RAM usage
+* High disk usage
 * High temperature
-* Network connectivity problems
+* Network connectivity failure
 
-Manually checking every computer can be time-consuming. SmartLab Guardian provides a command-line monitoring system that detects abnormal conditions, manages computer availability, and prioritizes maintenance tasks.
+Manually checking every computer can take time. SmartLab Guardian provides a system to monitor these conditions, detect faults, prioritize maintenance tasks, and manage available computers.
 
 ---
 
 ## Objectives
 
+The main objectives of this project are:
+
 * Monitor computer resource usage
-* Detect abnormal CPU, RAM, disk, and temperature conditions
-* Generate maintenance tasks for detected faults
-* Prioritize critical maintenance tasks
-* Manage computer allocation and release
+* Check network connectivity
+* Detect abnormal resource usage
+* Generate alerts for detected problems
+* Create prioritized maintenance tasks
+* Manage computer availability
+* Request a suitable computer based on RAM and CPU requirements
+* Release an assigned computer
 * Prevent faulty computers from being assigned
 * Demonstrate Data Structures and Algorithms
-* Apply Linux system-programming concepts
-* Demonstrate inter-process communication
-* Demonstrate TCP and UDP networking
-* Maintain synchronized system logs
-* Demonstrate C++ Object-Oriented Programming
+* Apply Linux system programming and monitoring concepts
+* Demonstrate networking concepts
+* Maintain system event logs
 
 ---
 
 ## Technologies Used
 
-* C++17
-* Linux
-* POSIX system calls
-* Linux `/proc` filesystem
-* TCP sockets
-* UDP sockets
-* Shared Memory
-* POSIX Semaphore
-* File locking
+* C++
+* C
+* Linux / WSL2
 * Git
 * GitHub
 
 ---
 
-# Concepts Demonstrated
+## Concepts Demonstrated
 
-## C++ and Object-Oriented Programming
+### C++ and OOP
 
 The project uses:
 
 * Classes
 * Structures
 * Objects
-* Constructors and destructors
+* Functions
 * Pointers
 * Dynamic memory allocation
-* Encapsulation
 * File handling
-* STL `priority_queue`
-* Vectors
-* Functions
 
-Major classes include:
+### Data Structures and Algorithms
 
-* `LabManager`
-* `Monitor`
-* `TcpServer`
-* `UdpClient`
-* `SharedMemoryManager`
-* `SemaphoreManager`
+The project demonstrates:
+
+* Singly Linked List
+* Linear Search
+* Priority Queue
+* Bubble Sort
+
+### Linux System Programming
+
+Linux concepts demonstrated include:
+
+* `/proc` system monitoring
+* CPU usage monitoring
+* RAM usage monitoring
+* Disk usage monitoring
+* File handling
+* Shared memory
+* Semaphore synchronization
+* File locking
+* System logging
+* Linux device-driver concepts
+
+### Computer Architecture
+
+The project relates to:
+
+* CPU
+* Memory
+* Storage
+* Computer performance
+* Hardware and software interaction
+
+### Networking
+
+The project demonstrates:
+
+* IP addresses
+* Computer nodes
+* TCP communication
+* UDP communication
+* Network connectivity
+* Telemetry transmission
 
 ---
 
-## Data Structures and Algorithms
+## Main Features
 
-### Singly Linked List
+### 1. Computer Registration
 
-Lab computers are maintained using a linked list.
+The system registers lab computers using:
 
-Each node contains information such as:
-
-```text
-Computer ID
-IP Address
-Location
-CPU Usage
-RAM Usage
-Disk Usage
-Temperature
-Online/Offline Status
-Availability State
-```
-
-### Linear Search
-
-The system searches for a computer using its ID by traversing the linked list.
+* Computer ID
+* IP address
+* Location
 
 Example:
 
 ```text
-Search: LAB-PC-03
-Result: Computer Found
+LAB-PC-01
+192.168.1.101
+Lab-A
 ```
 
-### Bubble Sort
-
-Computers can be sorted according to CPU utilization.
-
-The current implementation displays nodes in descending CPU order.
-
-Example:
+Four demonstration lab computers are registered:
 
 ```text
-LAB-PC-03 → 88%
-LAB-PC-02 → 78%
-LAB-PC-04 → 44%
-LAB-PC-01 → 0.1%
+LAB-PC-01 → 192.168.1.101 → Lab-A
+LAB-PC-02 → 192.168.1.102 → Lab-A
+LAB-PC-03 → 192.168.1.103 → Lab-B
+LAB-PC-04 → 192.168.1.104 → Lab-B
 ```
 
-### Priority Queue / Heap
+---
 
-Maintenance tasks are stored in a C++ `priority_queue`.
+### 2. Network Connectivity Check
 
-Tasks with higher severity are dispatched before lower-severity tasks.
+The system checks the connectivity status of monitored computers.
 
-Priority levels:
+If a computer is detected as offline, it can be marked unavailable and a critical maintenance task can be generated.
+
+---
+
+### 3. Resource Monitoring
+
+The system monitors:
+
+* CPU usage
+* RAM usage
+* Disk usage
+* Temperature
+
+The local Linux machine provides actual CPU, RAM, and disk information.
+
+Other lab computers use simulated values for demonstration.
+
+---
+
+### 4. Fault Detection
+
+Alerts and maintenance tasks are generated when predefined thresholds are crossed.
+
+Current thresholds include:
+
+```text
+CPU usage > 75%
+RAM usage > 80%
+Disk usage > 90%
+Temperature > 82 C
+```
+
+Network connectivity failure is also treated as a critical condition.
+
+When a fault is detected, the affected computer is marked:
+
+```text
+FAULTY
+```
+
+Faulty computers are not available for new computer requests.
+
+---
+
+### 5. Maintenance Priority Queue
+
+Maintenance tasks are stored in a priority queue according to severity.
+
+Higher-severity tasks are dispatched before lower-severity tasks.
+
+Priority levels include:
 
 ```text
 CRITICAL
@@ -145,215 +205,69 @@ MEDIUM
 LOW
 ```
 
----
-
-# Linux and Operating System Concepts
-
-## `/proc` System Monitoring
-
-The project reads Linux system information through the `/proc` filesystem.
-
-The local system provides actual telemetry for:
-
-* CPU
-* RAM
-* Disk
-
-Other lab nodes use demonstration values.
-
----
-
-## Shared Memory
-
-Shared memory is used for inter-process communication.
-
-The monitoring process writes node status information into a shared-memory region.
-
-A separate reader program can access the shared telemetry.
-
-This demonstrates fast IPC without repeatedly writing the same information to files.
-
----
-
-## Semaphore Synchronization
-
-A POSIX semaphore is used to protect shared-memory access.
-
-The basic synchronization flow is:
-
-```text
-Wait / Lock
-    ↓
-Write Shared Memory
-    ↓
-Signal / Unlock
-```
-
-This helps prevent simultaneous access to the shared resource.
-
----
-
-## File Locking
-
-System events are written to:
-
-```text
-data/system_log.txt
-```
-
-File locking using `flock()` is used while writing log entries so that concurrent access can be synchronized.
-
-Logged events include:
-
-* Node registration
-* Fault detection
-* Maintenance-task dispatch
-* Computer allocation
-* Computer release
-* Faulty computer status
-
----
-
-# Networking
-
-## TCP
-
-A TCP server is included in the project for status communication.
-
-The server uses a non-blocking `accept()` approach so that the monitoring process can continue even when no TCP client is connected.
-
-Example behavior:
-
-```text
-[i] No TCP client connected. Continuing scan.
-```
-
----
-
-## UDP
-
-UDP is used for telemetry transmission.
-
-SmartLab Guardian sends node-status messages to the UDP server.
-
 Example:
 
 ```text
-Computer: LAB-PC-03 | CPU: 88.000000% | RAM: 90.000000% | Disk: 40.000000%
+Task ID    : 1
+Target Node: LAB-PC-02
+Priority   : [HIGH]
+Issue      : RAM consumption high (>80%)
 ```
-
-During testing, telemetry from all four configured lab nodes was successfully received by the UDP server.
 
 ---
 
-# Computer Architecture
+### 6. Computer Resource Management
 
-The project connects software monitoring with fundamental computer-system components:
+SmartLab Guardian can assign a suitable computer according to user requirements.
 
-```text
-CPU
- │
- ├── CPU Utilization
- │
-Memory
- │
- ├── RAM Utilization
- │
-Storage
- │
- └── Disk Utilization
-```
-
-The monitoring system uses these parameters to identify abnormal computer conditions.
-
----
-
-# Fault Detection
-
-The system checks predefined thresholds.
-
-| Resource    | Threshold | Severity |
-| ----------- | --------: | -------- |
-| Disk        |     > 90% | CRITICAL |
-| Temperature |    > 82°C | CRITICAL |
-| RAM         |     > 80% | HIGH     |
-| CPU         |     > 75% | MEDIUM   |
-
-Multiple faults can be generated for the same computer during a single scan.
-
-For example, a computer with both high RAM and high CPU can generate two separate maintenance tasks.
-
-When a fault is detected, the affected computer is marked as:
-
-```text
-FAULTY
-```
-
-Faulty computers are excluded from computer allocation.
-
----
-
-# Computer Resource Management
-
-SmartLab Guardian also manages the availability of registered lab computers.
-
-## Request a Computer
-
-A user can request a computer by entering:
+The user provides:
 
 * Minimum required RAM
 * Maximum acceptable CPU usage
 
-The system searches the registered computers and selects a suitable computer that is:
-
-* `AVAILABLE`
-* Online
-* Has sufficient available RAM
-* Has CPU usage within the requested limit
-
-Available RAM is calculated from the current RAM utilization:
+The system checks:
 
 ```text
-Available RAM = 100 - Current RAM Usage
+Computer is AVAILABLE
+        AND
+Computer is ONLINE
+        AND
+Available RAM >= required RAM
+        AND
+CPU usage <= maximum CPU
 ```
 
-When a suitable computer is found, its availability state changes:
+Available RAM is calculated as:
 
 ```text
-AVAILABLE → ASSIGNED
+Available RAM = 100% - Current RAM Usage
 ```
 
-The system then displays the assigned computer's:
+If all conditions are satisfied, the computer is marked:
 
-* Computer ID
-* IP address
-* Location
-* Available RAM
-* Current CPU usage
-
-If no suitable computer is available, the system displays an appropriate message.
+```text
+ASSIGNED
+```
 
 ---
 
-## Release a Computer
+### 7. Computer Release
 
-An assigned computer can be released using its computer ID.
+An assigned computer can be released after use.
 
-When successfully released:
+The availability changes:
 
 ```text
 ASSIGNED → AVAILABLE
 ```
-
-The computer can then be considered for future allocation requests.
 
 A computer marked as `FAULTY` cannot be released as an available computer.
 
 ---
 
-## Availability States
+### 8. Computer Availability States
 
-Each registered computer can have one of three availability states:
+Each computer can have one of the following availability states:
 
 ```text
 AVAILABLE
@@ -361,123 +275,189 @@ ASSIGNED
 FAULTY
 ```
 
-The states represent:
+Example from testing:
 
-| State       | Meaning                                              |
-| ----------- | ---------------------------------------------------- |
-| `AVAILABLE` | Computer can be assigned if it satisfies the request |
-| `ASSIGNED`  | Computer is currently allocated to a user            |
-| `FAULTY`    | Computer has a detected fault and cannot be assigned |
+```text
+LAB-PC-01 → ASSIGNED
+LAB-PC-02 → FAULTY
+LAB-PC-03 → FAULTY
+LAB-PC-04 → AVAILABLE
+```
 
-The availability state is displayed together with the computer's monitoring information.
+This allows the system to distinguish between computers that are ready for use, currently assigned, and unavailable because of faults.
+
+---
+
+### 9. Linear Search
+
+A computer can be searched using its Computer ID.
 
 Example:
 
 ```text
-LAB-PC-01   ASSIGNED
-LAB-PC-02   FAULTY
-LAB-PC-03   FAULTY
-LAB-PC-04   AVAILABLE
+LAB-PC-03
+```
+
+The system traverses the linked list and searches for the requested computer.
+
+---
+
+### 10. Bubble Sort
+
+Computers can be sorted according to CPU usage.
+
+The current implementation displays computers in descending order of CPU utilization.
+
+Example:
+
+```text
+LAB-PC-03 → 88.0%
+LAB-PC-02 → 78.0%
+LAB-PC-04 → 44.0%
+LAB-PC-01 → 0.1%
 ```
 
 ---
 
-# Main Features
+### 11. TCP Communication
 
-## 1. Computer Registration
+The project includes TCP communication for communication between the monitoring system and lab-node services.
 
-The system registers four demonstration lab nodes:
-
-```text
-LAB-PC-01   192.168.1.101   Lab-A
-LAB-PC-02   192.168.1.102   Lab-A
-LAB-PC-03   192.168.1.103   Lab-B
-LAB-PC-04   192.168.1.104   Lab-B
-```
-
-## 2. Health Monitoring
-
-The system scans registered nodes and updates their health information.
-
-## 3. Fault Detection
-
-Resource thresholds are evaluated and maintenance tasks are generated automatically.
-
-If a fault is detected, the affected computer is marked as `FAULTY`.
-
-Faulty computers are automatically skipped during computer allocation.
-
-## 4. Computer Resource Management
-
-Users can request a computer by specifying minimum required RAM and maximum acceptable CPU usage.
-
-The system searches for a suitable online computer that is `AVAILABLE` and satisfies the requested resource conditions.
-
-## 5. Computer Release
-
-An assigned computer can be released using its computer ID.
-
-The availability state changes from:
+The TCP server runs on:
 
 ```text
-ASSIGNED → AVAILABLE
+Port: 5000
 ```
 
-## 6. Availability States
+If no TCP client is connected during a scan, the application continues without blocking the monitoring process.
 
-Each computer can be in one of the following states:
+---
+
+### 12. UDP Telemetry
+
+The project uses UDP for telemetry transmission.
+
+During testing, UDP telemetry was successfully sent through the local demonstration environment.
+
+---
+
+### 13. Shared Memory and Semaphore
+
+The project demonstrates inter-process communication using:
+
+* Shared memory
+* Semaphore synchronization
+
+Shared memory is used for exchanging information between processes, while the semaphore provides synchronization.
+
+---
+
+### 14. System Logging
+
+Important events are written to:
 
 ```text
-AVAILABLE
-ASSIGNED
-FAULTY
+data/system_log.txt
 ```
 
-Faulty computers cannot be assigned.
+The log can contain events such as:
 
-## 7. Priority-Based Maintenance
+* Computer registration
+* Fault detection
+* Alerts
+* Maintenance tasks
+* Computer availability changes
+* Task dispatch
 
-The priority queue ensures that higher-severity tasks are dispatched first.
+---
 
-## 8. Computer Search
+### 15. Linux Device Driver Check
 
-A computer can be searched by its ID using Linear Search.
+The project includes a Linux character-device driver source:
 
-## 9. CPU-Based Sorting
+```text
+driver/smartlab_driver.c
+```
 
-Computers can be sorted using Bubble Sort according to CPU utilization.
-
-## 10. Shared-Memory IPC
-
-Node telemetry can be shared with another process using shared memory.
-
-## 11. Synchronization
-
-Semaphore synchronization protects shared-memory operations.
-
-## 12. Network Telemetry
-
-UDP telemetry and TCP status communication are implemented.
-
-## 13. System Logging
-
-Important events are recorded in `data/system_log.txt` using file locking.
-
-## 14. Linux Device Driver Check
-
-The application checks for the expected character device:
+The application checks whether the expected device exists:
 
 ```text
 /dev/smartlab
 ```
 
-The driver source is included in the project.
+In the current WSL2 development environment, `/dev/smartlab` is not available.
 
-Because the project was developed and tested in a Linux environment through WSL2, the character device could not be loaded in the development environment. The application therefore reports its availability honestly at runtime.
+Therefore, the application reports the device status honestly instead of claiming that the driver has been loaded.
+
+The driver can be loaded and tested on a compatible Linux kernel environment.
 
 ---
 
-# Program Menu
+## Project Structure
+
+```text
+SmartLabGuardian/
+│
+├── .gitignore
+├── README.md
+│
+├── data/
+│   └── system_log.txt
+│
+├── driver/
+│   ├── Makefile
+│   └── smartlab_driver.c
+│
+└── src/
+    ├── Alert.h
+    ├── Computer.h
+    ├── DeviceClient
+    ├── DeviceClient.cpp
+    ├── LabManager.cpp
+    ├── LabManager.h
+    ├── MaintenanceTask.h
+    ├── Monitor.cpp
+    ├── Monitor.h
+    ├── SemaphoreManager.cpp
+    ├── SemaphoreManager.h
+    ├── SharedMemoryManager.cpp
+    ├── SharedMemoryManager.h
+    ├── SharedMemoryReader.cpp
+    ├── SmartLabGuardian
+    ├── TcpClient.cpp
+    ├── TcpServer.cpp
+    ├── TcpServer.h
+    ├── UdpClient.cpp
+    ├── UdpClient.h
+    ├── UdpServer.cpp
+    └── main.cpp
+```
+
+---
+
+## How to Compile
+
+Open a Linux/WSL2 terminal and move to the project directory:
+
+```bash
+cd /mnt/c/Users/HP/OneDrive/Desktop/SmartLabGuardian
+```
+
+Compile the main application using:
+
+```bash
+g++ -std=c++17 src/main.cpp src/LabManager.cpp src/Monitor.cpp src/SemaphoreManager.cpp src/SharedMemoryManager.cpp src/TcpServer.cpp src/UdpClient.cpp -o SmartLabGuardian
+```
+
+Run the program:
+
+```bash
+./SmartLabGuardian
+```
+
+---
+
+## Program Menu
 
 ```text
 ============================================
@@ -496,327 +476,167 @@ Because the project was developed and tested in a Linux environment through WSL2
 
 ---
 
-# Project Structure
+## System Workflow
+
+The main monitoring workflow is:
 
 ```text
-SmartLabGuardian/
-│
-├── .gitignore
-├── README.md
-│
-├── driver/
-│   ├── Makefile
-│   └── smartlab_driver.c
-│
-├── data/
-│   └── system_log.txt
-│
-└── src/
-    ├── Alert.h
-    ├── Computer.h
-    ├── LabManager.cpp
-    ├── LabManager.h
-    ├── MaintenanceTask.h
-    ├── Monitor.cpp
-    ├── Monitor.h
-    ├── SemaphoreManager.cpp
-    ├── SemaphoreManager.h
-    ├── SharedMemoryManager.cpp
-    ├── SharedMemoryManager.h
-    ├── SharedMemoryReader.cpp
-    ├── TcpClient.cpp
-    ├── TcpServer.cpp
-    ├── TcpServer.h
-    ├── UdpClient.cpp
-    ├── UdpClient.h
-    ├── UdpServer.cpp
-    └── main.cpp
+Lab Computer Registration
+          ↓
+System Resource Monitoring
+          ↓
+Network Connectivity Check
+          ↓
+Fault Detection
+          ↓
+┌─────────────────────┐
+│ Fault Detected?     │
+└──────────┬──────────┘
+           │
+      Yes  ↓
+     Mark FAULTY
+           ↓
+ Create Maintenance Task
+           ↓
+   Priority Queue
+           ↓
+ Dispatch Task
 ```
 
----
-
-# How to Compile
-
-Open the Linux terminal and move to the project directory:
-
-```bash
-cd /mnt/c/Users/HP/OneDrive/Desktop/SmartLabGuardian
-```
-
-Compile the main application:
-
-```bash
-g++ -std=c++17 \
-src/main.cpp \
-src/LabManager.cpp \
-src/Monitor.cpp \
-src/SharedMemoryManager.cpp \
-src/SemaphoreManager.cpp \
-src/TcpServer.cpp \
-src/UdpClient.cpp \
--o SmartLabGuardian
-```
-
-Run:
-
-```bash
-./SmartLabGuardian
-```
-
----
-
-# Running UDP Telemetry Test
-
-Compile the UDP server:
-
-```bash
-g++ src/UdpServer.cpp -o UdpServer
-```
-
-Run it:
-
-```bash
-./UdpServer
-```
-
-Then run SmartLab Guardian and select:
+Computer resource management works as:
 
 ```text
-1
+User Requests Computer
+          ↓
+Check AVAILABLE State
+          ↓
+Check ONLINE Status
+          ↓
+Check Available RAM
+          ↓
+Check Maximum CPU
+          ↓
+      Suitable?
+       /      \
+     Yes       No
+      ↓         ↓
+  ASSIGNED   Try Next Node
+      ↓
+  User Uses PC
+      ↓
+   Release
+      ↓
+  AVAILABLE
 ```
-
-The UDP server receives telemetry messages from the configured nodes.
 
 ---
 
-# Example Fault Detection
+## Example Testing Results
 
 During testing, the system detected:
 
 ```text
 LAB-PC-02
 RAM: 81%
-CPU: 78%
 ```
 
-and generated:
-
-```text
-HIGH: High memory usage
-MEDIUM: CPU threshold breached
-```
-
-For another node:
+and:
 
 ```text
 LAB-PC-03
-RAM: 90%
 CPU: 88%
+RAM: 90%
 ```
 
-multiple maintenance tasks were generated.
-
-The priority queue dispatched the HIGH-priority task before the MEDIUM-priority task.
-
-When faults were detected, the affected computers were marked as:
+These computers were marked:
 
 ```text
-LAB-PC-02 → FAULTY
-LAB-PC-03 → FAULTY
+FAULTY
 ```
 
-These computers were then excluded from resource allocation.
-
----
-
-# Example Computer Allocation
-
-A user can request a computer by providing resource requirements.
-
-Example:
+A suitable computer request successfully assigned:
 
 ```text
-Enter minimum RAM required (%): 20
-Enter maximum acceptable CPU usage (%): 100
+LAB-PC-01
 ```
 
-If a suitable computer is available:
-
-```text
-[+] Computer Assigned Successfully
-Computer: LAB-PC-01
-IP Address: 192.168.1.101
-Location: Lab-A
-Available RAM: 93.9%
-Current CPU Usage: 0.2%
-```
-
-The availability state becomes:
-
-```text
-AVAILABLE → ASSIGNED
-```
-
----
-
-# Example Computer Release
-
-An assigned computer can be released using its ID:
-
-```text
-Enter Computer ID to release: LAB-PC-01
-```
-
-The system changes its state:
+The system also successfully released the computer:
 
 ```text
 ASSIGNED → AVAILABLE
 ```
 
-and displays:
+The tested system state was:
 
 ```text
-[+] Computer Released Successfully
+LAB-PC-01 → AVAILABLE / ASSIGNED during testing
+LAB-PC-02 → FAULTY
+LAB-PC-03 → FAULTY
+LAB-PC-04 → AVAILABLE
 ```
+
+The priority queue successfully dispatched a HIGH-priority task for `LAB-PC-02`.
+
+Bubble Sort successfully arranged the computers by descending CPU usage.
+
+Linear Search successfully found `LAB-PC-03` and displayed its current status and availability.
 
 ---
 
-# System Processing Flow
+## Limitations
 
-```text
-Computer Registration
-        ↓
-Singly Linked List
-        ↓
-System Health Monitoring
-        ↓
-Fault Detection
-        ↓
-Availability State
-        ↓
-Computer Resource Request
-        ↓
-Suitable Computer Assignment
-        ↓
-ASSIGNED
-        ↓
-Computer Release
-        ↓
-AVAILABLE
-```
-
-Maintenance processing:
-
-```text
-Fault Detection
-        ↓
-Maintenance Task Creation
-        ↓
-Priority Queue
-        ↓
-Highest-Priority Task Dispatch
-```
-
-Additional processing:
-
-```text
-Health Data
-    ├──→ Shared Memory
-    │        ↓
-    │   Semaphore
-    │        ↓
-    │   IPC Reader
-    │
-    ├──→ TCP Communication
-    │
-    └──→ UDP Telemetry
-```
+* The project was developed and tested using a Linux environment through WSL2.
+* Only the local Linux machine provides actual system resource telemetry.
+* Other lab computers are represented using simulated values for demonstration.
+* Temperature values for simulated computers are also simulated.
+* The network addresses used for demonstration do not represent a real multi-computer laboratory deployment.
+* UDP communication was tested in the local demonstration environment.
+* The `/dev/smartlab` character device is not available in the current WSL2 environment.
+* The Linux character driver was therefore not loaded as a kernel module during WSL2 testing.
+* The project does not directly control or physically repair hardware.
+* The current implementation does not provide a graphical user interface.
 
 ---
 
-# Testing Summary
+## Future Scope
 
-The following components were tested successfully:
+The system can later be extended with:
 
-| Component                        | Status                                   |
-| -------------------------------- | ---------------------------------------- |
-| C++ application                  | Tested                                   |
-| Node registration                | Tested                                   |
-| `/proc` telemetry                | Tested                                   |
-| Linked List                      | Tested                                   |
-| Linear Search                    | Tested                                   |
-| Bubble Sort                      | Tested                                   |
-| Priority Queue                   | Tested                                   |
-| Multiple fault detection         | Tested                                   |
-| Computer resource request        | Tested                                   |
-| Computer release                 | Tested                                   |
-| AVAILABLE / ASSIGNED states      | Tested                                   |
-| FAULTY state                     | Tested                                   |
-| Faulty-node allocation exclusion | Tested                                   |
-| Shared Memory                    | Tested                                   |
-| Semaphore synchronization        | Tested                                   |
-| File locking and logging         | Tested                                   |
-| TCP communication                | Tested                                   |
-| UDP communication                | Tested                                   |
-| UDP telemetry from 4 nodes       | Tested                                   |
-| Linux device-driver loading      | Not available in the current environment |
-
----
-
-# Limitations
-
-* The project was developed and tested in a Linux environment through WSL2.
-* The Linux character device `/dev/smartlab` could not be loaded in the WSL2 development environment.
-* Only the local Linux environment provides actual system telemetry.
-* Other lab-node values are simulated for demonstration.
-* The configured IP addresses represent demonstration lab nodes.
-* The current UDP demonstration uses localhost communication.
-* The project does not directly repair or control physical hardware.
-* Computer allocation is based on the current monitoring values and does not physically control or power on lab computers.
-
----
-
-# Future Scope
-
-The project can be extended with:
-
-* Real monitoring agents installed on multiple lab computers
-* Persistent database storage
-* Graphical monitoring dashboard
-* Real hardware sensor integration
-* Real-time alerts
-* Advanced network monitoring
-* Linux kernel deployment on a compatible environment
-* Microcontroller integration
+* Real monitoring agents on multiple lab computers
+* Native Linux deployment
+* A graphical user interface
+* Database storage for monitoring history
+* More detailed network monitoring
+* Hardware sensor integration
+* Real device-driver integration
+* Microcontroller-based monitoring
 * Remote maintenance management
-* Real-time resource reservation across multiple lab computers
 
 ---
 
-# Learning Outcomes
+## Learning Outcomes
 
-This project provided practical experience with:
+This project helped demonstrate practical use of:
 
 * C++ programming
 * Object-Oriented Programming
 * Data Structures and Algorithms
 * Linux system programming
-* `/proc` filesystem
-* Inter-Process Communication
-* Shared Memory
-* Semaphores
-* File locking
-* TCP/IP networking
-* UDP networking
-* Computer Architecture
+* Linux system monitoring
 * Operating System concepts
+* Computer Architecture
+* Networking concepts
+* TCP and UDP communication
+* Inter-process communication
+* Shared memory
+* Semaphore synchronization
+* File handling
 * Linux device-driver concepts
-* Resource allocation logic
 * Git and GitHub
 
 ---
 
-## Author
+## Project Information
 
 **Sneha Burma**
 
