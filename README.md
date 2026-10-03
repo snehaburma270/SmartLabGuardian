@@ -682,9 +682,3 @@ This project helped demonstrate practical use of:
 
 ---
 
-## Project Developer
-
-**Sneha Burma**
-
-B.Tech Computer Science and Engineering  
-ITER, SOA University
