@@ -9,7 +9,7 @@
 #include <sys/statvfs.h>
 #endif
 
-// CPU Metric: Reads /proc/stat on Linux, simulates on Windows
+
 double Monitor::getHostCpuUsage() {
 #ifdef __linux__
     std::ifstream file("/proc/stat");
@@ -28,10 +28,10 @@ double Monitor::getHostCpuUsage() {
         }
     }
 #endif
-    return 35.0 + (rand() % 45); // Dynamic fallback
+    return 35.0 + (rand() % 45); 
 }
 
-// RAM Metric: Reads /proc/meminfo on Linux, simulates on Windows
+
 double Monitor::getHostRamUsage() {
 #ifdef __linux__
     std::ifstream file("/proc/meminfo");
@@ -55,7 +55,7 @@ double Monitor::getHostRamUsage() {
     return 48.0 + (rand() % 40);
 }
 
-// Disk Metric: Uses statvfs() on Linux, simulates on Windows
+
 double Monitor::getHostDiskUsage(const std::string& path) {
 #ifdef __linux__
     struct statvfs stat;
