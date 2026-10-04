@@ -5,10 +5,10 @@
 #include <iomanip>
 #include <ctime>
 
-// Constructor initializes empty list and IDs
+
 LabManager::LabManager() : head(nullptr), nextTaskId(1), nextAlertId(101) {}
 
-// Destructor traverses the linked list and frees dynamic memory
+
 LabManager::~LabManager() {
     Computer* current = head;
     while (current != nullptr) {
@@ -18,7 +18,7 @@ LabManager::~LabManager() {
     }
 }
 
-// Logs events with timestamps to data/system_log.txt
+
 void LabManager::logEvent(const std::string& message) {
     std::ofstream out("data/system_log.txt", std::ios::app);
     if (!out.is_open()) return;
@@ -30,12 +30,12 @@ void LabManager::logEvent(const std::string& message) {
 #else
     ctime_r(&now, buf);
 #endif
-    buf[24] = '\0'; // Remove trailing newline
+    buf[24] = '\0'; 
 
     out << "[" << buf << "] " << message << "\n";
 }
 
-// Linked List Operation: Insert at end
+
 void LabManager::addComputer(const std::string& id, const std::string& ip, const std::string& loc) {
     Computer* newComp = new Computer(id, ip, loc);
     if (head == nullptr) {
